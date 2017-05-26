@@ -1,13 +1,3 @@
-/* Start Header -------------------------------------------------------
-Copyright (C) 2009 DigiPen Institute of Technology.
-Reproduction or disclosure of this file or its contents without the
-prior written consent of DigiPen Institute of Technology is prohibited.
-File Name: Vec2.h
-Purpose: Vector 2
-Language: C++, Visual Studio 2005
-Platform: Visual Studio 8, Windows
-Author: Jeremy Anderson, janders2, 40000706
-- End Header --------------------------------------------------------*/
 #pragma once
 
 #ifndef VEC2_H

@@ -1,15 +1,3 @@
-/* Start Header -------------------------------------------------------
-Copyright (C) 2009 DigiPen Institute of Technology.
-Reproduction or disclosure of this file or its contents without the
-prior written consent of DigiPen Institute of Technology is prohibited.
-File Name: Vector.cpp
-Purpose: Vector
-Language: C++, Visual Studio 2005
-Platform: Visual Studio 8, Windows
-Project: janders2_CS250_2
-Author: Jeremy Anderson, janders2, 40000706
-Creation date: Monday, January 20, 2009
-- End Header --------------------------------------------------------*/
 #include "Vec4.h"
 #include <cmath>
 

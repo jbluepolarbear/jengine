@@ -1,18 +1,3 @@
-////////////////////////////////////////////////////////////////////////////////
-/*!
-  @par    Project:GAM200 Game Engine
-  @par    Course: GAM200
-  @file   FileIO.cpp
-  @author Jeremy Robert Anderson
-  @par    email: janders2\@digipen.edu
-  @date   October 4, 2008
-
-  @brief
-    The FileIO Class
-
-  @brief  Copyright (C) 2008 DigiPen Institute of Technology.
-*/
-////////////////////////////////////////////////////////////////////////////////
 #include "FileIO.h"
 #include <sstream>
 

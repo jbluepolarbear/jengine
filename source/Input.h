@@ -1,11 +1,3 @@
-/*---------------------------------------------------------------------------
-Project Title : Game Engine
-File Name : Input.h
-Author : Jeremy Anderson
-Creation Date : 05/05/08
-Purpose : Input Declarations
-History
-----------------------------------------------------------------------------*/
 #ifndef INPUT_H
 #define INPUT_H
 // ---------------------------------------------------------------------------

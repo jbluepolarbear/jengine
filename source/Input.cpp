@@ -1,12 +1,3 @@
-/*---------------------------------------------------------------------------
-Project Title : Game Engine
-File Name : InputContoller.cpp
-Author : Jeremy Anderson
-Creation Date : 03/15/08
-Purpose : InputContoller definitions
-History
-----------------------------------------------------------------------------*/
-
 #include "Input.h"
 #include <iostream>
 

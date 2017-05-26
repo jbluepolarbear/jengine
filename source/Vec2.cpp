@@ -1,11 +1,3 @@
-/* Start Header -------------------------------------------------------
-File Name: Vector.cpp
-Purpose: Vector
-Language: C++, Visual Studio 2005
-Platform: Visual Studio 8, Windows
-Author: Jeremy Anderson
-Creation date: Monday, January 20, 2009
-- End Header --------------------------------------------------------*/
 #include "Vec2.h"
 #include <cmath>
 

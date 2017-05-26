@@ -1,18 +1,3 @@
-////////////////////////////////////////////////////////////////////////////////
-/*!
-  @par    Project:GAM300 Game Engine
-  @par    Course: GAM300
-  @file   FileIO.h
-  @author Jeremy Robert Anderson
-  @par    email: janders2\@digipen.edu
-  @date   October 4, 2009
-
-  @brief
-    The FileIO Class
-
-  @brief  Copyright (C) 2009 DigiPen Institute of Technology.
-*/
-////////////////////////////////////////////////////////////////////////////////
 #pragma once
 
 #ifndef _CRT_SECURE_NO_DEPRECATE
