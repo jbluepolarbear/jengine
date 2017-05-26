@@ -23,6 +23,7 @@
     <ClInclude Include="source\FileIO.h" />
     <ClInclude Include="source\Input.h" />
     <ClInclude Include="source\jengine.h" />
+    <ClInclude Include="source\JImage.h" />
     <ClInclude Include="source\lodepng.h" />
     <ClInclude Include="source\Matrix.h" />
     <ClInclude Include="source\thread_pool.h" />
@@ -33,6 +34,7 @@
     <ClInclude Include="source\Vec4.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="json\jsoncpp.cpp" />
     <ClCompile Include="source\Display.cpp" />
     <ClCompile Include="source\FileIO.cpp" />
     <ClCompile Include="source\Input.cpp" />
