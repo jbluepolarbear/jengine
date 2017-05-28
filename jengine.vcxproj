@@ -24,6 +24,7 @@
     <ClInclude Include="source\Input.h" />
     <ClInclude Include="source\jengine.h" />
     <ClInclude Include="source\JImage.h" />
+    <ClInclude Include="source\JTextureManager.h" />
     <ClInclude Include="source\lodepng.h" />
     <ClInclude Include="source\Matrix.h" />
     <ClInclude Include="source\thread_pool.h" />
@@ -39,6 +40,7 @@
     <ClCompile Include="source\FileIO.cpp" />
     <ClCompile Include="source\Input.cpp" />
     <ClCompile Include="source\jengine.cpp" />
+    <ClCompile Include="source\JTextureManager.cpp" />
     <ClCompile Include="source\lodepng.cpp" />
     <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\Matrix.cpp" />
@@ -73,7 +75,7 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>

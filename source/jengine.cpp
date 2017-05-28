@@ -10,6 +10,8 @@
 #include "SDL/SDL_opengl.h"
 #include "Input.h"
 #include <crtdbg.h>
+#include "Utilities.h"
+#include "JTextureManager.h"
 ///////////////////////////////////
 
 #pragma comment(lib, "GL/lib/glew32.lib")
@@ -45,9 +47,9 @@ public:
 };
 
 JEngine::JEngine()
-    : mThreadPool(10)
 {
-
+    mThreadPool = std::make_shared<thread_pool>(10);
+    mTextureManager = std::make_shared<JTextureManager>(*this);
 }
 
 JEngine::~JEngine()
@@ -55,9 +57,29 @@ JEngine::~JEngine()
     SDL_Quit();
 }
 
+auto replace(const std::string &str, const std::string &token, const std::string &replaceToken)
+{
+    std::string rStr = str;
+    while (true)
+    {
+        auto found = rStr.find_first_of(token);
+        if (found == std::string::npos)
+        {
+            break;
+        }
+
+        rStr = rStr.replace(found, token.size(), replaceToken);
+    }
+
+    return rStr;
+}
+
 void JEngine::Initialize()
 {
     EnableMemoryLeakChecking();
+    mResourcesPath = GetProgramPath() + "\\resources\\";
+    //mResourcesPath = replace(mResourcesPath, "\\", "/");
+    mTextureManager->GetTexture("texture\\killer bunny.png");
     srand((int)Time::Clock());
     mWindow = std::make_shared<WindowManager>();
     mWindow->mWidth = 1280;
@@ -133,5 +155,10 @@ void JEngine::Run()
 
 thread_pool &JEngine::ThreadPool()
 {
-    return mThreadPool;
+    return *mThreadPool;
+}
+
+const std::string JEngine::ResourcesPath() const
+{
+    return mResourcesPath;
 }

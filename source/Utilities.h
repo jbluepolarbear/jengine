@@ -3,4 +3,4 @@
 
 std::string GetProgramPath();
 
-std::string GetPersonalPath();
+std::string GetPersonalPath(const std::string &folder);
