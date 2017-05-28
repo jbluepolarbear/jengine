@@ -12,6 +12,7 @@
 #include <crtdbg.h>
 #include "Utilities.h"
 #include "JTextureManager.h"
+#include "JTexture.h"
 ///////////////////////////////////
 
 #pragma comment(lib, "GL/lib/glew32.lib")
@@ -79,7 +80,6 @@ void JEngine::Initialize()
     EnableMemoryLeakChecking();
     mResourcesPath = GetProgramPath() + "\\resources\\";
     //mResourcesPath = replace(mResourcesPath, "\\", "/");
-    mTextureManager->GetTexture("texture\\killer bunny.png");
     srand((int)Time::Clock());
     mWindow = std::make_shared<WindowManager>();
     mWindow->mWidth = 1280;
@@ -117,8 +117,15 @@ void JEngine::Run()
 
     bool running = true;
     Time::Timer timer;
+    auto jTexture = mTextureManager->GetTexture("textures\\killer bunny.png");
 
-    ////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////  glMatrixMode( GL_PROJECTION );
+    glLoadIdentity();
+    glViewport(0, 0, mWindow->mWidth, mWindow->mHeight);
+    //gluPerspective( 41.95f, float(SCREEN_WIDTH)/SCREEN_HEIGHT, 0.1f, 1000.0f );
+    gluOrtho2D(0, mWindow->mWidth, mWindow->mHeight, 0);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
     ////////////////////////////////////////////////////////////////////
     float r = 0.0f, g = 0.0f, b = 0.0;
     while (running)
@@ -145,6 +152,14 @@ void JEngine::Run()
         }
         glClearColor(r, g, b, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
+
+        // Draw the texture on a quad, using u3 and v3 to correct non power of two texture size.
+        glBegin(GL_QUADS);
+        glTexCoord2d(0, 0); glVertex2f(0, 0);
+        glTexCoord2d(1.0, 0); glVertex2f((double)jTexture->GetWidth(), 0);
+        glTexCoord2d(1.0, 1.0); glVertex2f((double)jTexture->GetWidth(), (double)jTexture->GetHeight());
+        glTexCoord2d(0, 1.0); glVertex2f(0, (double)jTexture->GetHeight());
+        glEnd();
 
         SDL_GL_SwapWindow(mWindow->mWindow);
         timer.Stop();

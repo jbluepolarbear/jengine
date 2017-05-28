@@ -24,8 +24,10 @@
     <ClInclude Include="source\Input.h" />
     <ClInclude Include="source\jengine.h" />
     <ClInclude Include="source\JImage.h" />
+    <ClInclude Include="source\JTexture.h" />
     <ClInclude Include="source\JTextureManager.h" />
     <ClInclude Include="source\lodepng.h" />
+    <ClInclude Include="source\JMathUtils.h" />
     <ClInclude Include="source\Matrix.h" />
     <ClInclude Include="source\thread_pool.h" />
     <ClInclude Include="source\TimeClass.h" />
@@ -40,6 +42,7 @@
     <ClCompile Include="source\FileIO.cpp" />
     <ClCompile Include="source\Input.cpp" />
     <ClCompile Include="source\jengine.cpp" />
+    <ClCompile Include="source\JTexture.cpp" />
     <ClCompile Include="source\JTextureManager.cpp" />
     <ClCompile Include="source\lodepng.cpp" />
     <ClCompile Include="source\main.cpp" />

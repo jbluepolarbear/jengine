@@ -5,6 +5,7 @@
 #include <memory>
 #include <map>
 
+class JImage;
 class JTexture;
 class JTextureManager
 {
@@ -16,6 +17,7 @@ private:
     auto GetFilenameFromPath(const std::string &path);
     JEngine &mJEngine;
     std::map<std::string, std::shared_ptr<JTexture> > mJTextures;
+    std::shared_ptr<JImage> mDefaultImage;
 };
 
 #endif//JTEXTURE_MANAGER_H

@@ -57,6 +57,12 @@
     <ClInclude Include="source\JTextureManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="source\JTexture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\JMathUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\Display.cpp">
@@ -99,6 +105,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\JTextureManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\JTexture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
