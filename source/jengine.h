@@ -5,7 +5,7 @@
 
 class JTextureManager;
 
-class WindowManager;
+class Sdl;
 class JEngine
 {
     public:
@@ -17,7 +17,7 @@ class JEngine
         const std::string ResourcesPath() const;
     private:
         std::shared_ptr<thread_pool> mThreadPool;
-        std::shared_ptr<WindowManager> mWindow;
+        std::shared_ptr<Sdl> mSdl;
         std::string mResourcesPath;
         std::shared_ptr<JTextureManager> mTextureManager;
 };

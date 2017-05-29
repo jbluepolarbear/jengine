@@ -4,15 +4,15 @@
 #include <windows.h>
 
 #include "TimeClass.h"
-///////////////////////////////////
 #include "gl/glew.h"
-#include "SDL/SDL.h"
-#include "SDL/SDL_opengl.h"
+#include "sdl_class.h"
+///////////////////////////////////
 #include "Input.h"
 #include <crtdbg.h>
 #include "Utilities.h"
 #include "JTextureManager.h"
 #include "JTexture.h"
+#include "Shader.h"
 ///////////////////////////////////
 
 #pragma comment(lib, "GL/lib/glew32.lib")
@@ -37,20 +37,10 @@ void EnableMemoryLeakChecking(int breakAlloc = -1)
     if (breakAlloc != -1) _CrtSetBreakAlloc(breakAlloc);
 }
 
-class WindowManager
-{
-public:
-    std::string mWindowName;
-    unsigned mWidth;
-    unsigned mHeight;
-    unsigned mWindowFlags;
-    SDL_Window *mWindow;
-};
-
 JEngine::JEngine()
 {
     mThreadPool = std::make_shared<thread_pool>(10);
-    mTextureManager = std::make_shared<JTextureManager>(*this);
+    mSdl = std::make_unique<Sdl>();
 }
 
 JEngine::~JEngine()
@@ -80,33 +70,11 @@ void JEngine::Initialize()
     EnableMemoryLeakChecking();
     mResourcesPath = GetProgramPath() + "\\resources\\";
     //mResourcesPath = replace(mResourcesPath, "\\", "/");
+    mSdl->init();
+    int glerror = glGetError();
+    mTextureManager = std::make_shared<JTextureManager>(*this);
+    glerror = glGetError();
     srand((int)Time::Clock());
-    mWindow = std::make_shared<WindowManager>();
-    mWindow->mWidth = 1280;
-    mWindow->mHeight = 720;
-    mWindow->mWindowName = "Game Title";
-    bool fullscreen = false;
-    mWindow->mWindowFlags = SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL;
-
-    if (fullscreen)
-    {
-        mWindow->mWindowFlags |= SDL_WINDOW_FULLSCREEN;
-    }
-
-    SDL_Init(SDL_INIT_EVERYTHING);
-
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 4);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-
-    mWindow->mWindow = SDL_CreateWindow(mWindow->mWindowName.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, mWindow->mWidth, mWindow->mHeight, mWindow->mWindowFlags);
-
-    SDL_GL_CreateContext(mWindow->mWindow);
-    SDL_GL_SetSwapInterval(0);
-
-    //Initialize GLEW
-    glewExperimental = GL_TRUE;
-    GLenum glewError = glewInit();
 }
 
 void JEngine::Run()
@@ -114,35 +82,26 @@ void JEngine::Run()
     Input input;
 
     input.Init();
+    Shader shader;
+    shader.AddFragmentShader(ResourcesPath() + "shaders/frame.fs");
+    shader.AddVertexShader(ResourcesPath() + "shaders/frame.vs");
+    shader.LinkProgram();
+    int glerror = glGetError();
 
     bool running = true;
     Time::Timer timer;
     auto jTexture = mTextureManager->GetTexture("textures\\killer bunny.png");
-
-    ////////////////////////////////////////////////////////////////////  glMatrixMode( GL_PROJECTION );
-    glLoadIdentity();
-    glViewport(0, 0, mWindow->mWidth, mWindow->mHeight);
-    //gluPerspective( 41.95f, float(SCREEN_WIDTH)/SCREEN_HEIGHT, 0.1f, 1000.0f );
-    gluOrtho2D(0, mWindow->mWidth, mWindow->mHeight, 0);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    ////////////////////////////////////////////////////////////////////
     float r = 0.0f, g = 0.0f, b = 0.0;
     while (running)
     {
-        ThreadPool().update();
-        r = (float)sin(timer.GetTotal());
-        g = (float)sin(timer.GetTotal() * 2.0);
-        b = (float)sin(timer.GetTotal() * 4.0);
-        timer.Start();
-        SDL_Event event;
-        while (SDL_PollEvent(&event))
+        mSdl->update([&running](SDL_Event &event)
         {
             if (event.type == SDL_QUIT)
             {
                 running = false;
             }
-        }
+        });
+        timer.Start();
 
         input.Update();
 
@@ -150,18 +109,33 @@ void JEngine::Run()
         {
             running = false;
         }
-        glClearColor(r, g, b, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        ThreadPool().update();
 
+        if (!running)
+        {
+            break;
+        }
+
+        mSdl->begin();
+        glerror = glGetError();
+        shader.BindProgram();
+        glerror = glGetError();
+        glBindTexture(GL_TEXTURE_2D, jTexture->GetTextureId());
+        shader.uniform("Texture", 0);
+        shader.uniform("alpha", 1.0f);
+        float colors[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+        shader.uniform<3>("Color", colors);
+        glerror = glGetError();
         // Draw the texture on a quad, using u3 and v3 to correct non power of two texture size.
         glBegin(GL_QUADS);
+        glerror = glGetError();
         glTexCoord2d(0, 0); glVertex2f(0, 0);
         glTexCoord2d(1.0, 0); glVertex2f((double)jTexture->GetWidth(), 0);
         glTexCoord2d(1.0, 1.0); glVertex2f((double)jTexture->GetWidth(), (double)jTexture->GetHeight());
         glTexCoord2d(0, 1.0); glVertex2f(0, (double)jTexture->GetHeight());
         glEnd();
-
-        SDL_GL_SwapWindow(mWindow->mWindow);
+        glerror = glGetError();
+        mSdl->end();
         timer.Stop();
     }
 

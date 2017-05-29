@@ -41,14 +41,13 @@ unsigned CreateOpenGLTexture(std::shared_ptr<JImage> jImage, bool powerOf2 = fal
     }
 
     // Enable the texture for OpenGL.
-    glEnable(GL_TEXTURE_2D);
     unsigned textureId;
     glGenTextures(1, &textureId);
     glBindTexture(GL_TEXTURE_2D, textureId);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); //GL_NEAREST = no smoothing
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexImage2D(GL_TEXTURE_2D, 0, bytesPerPixel, width2, height2, 0, GL_RGBA, GL_UNSIGNED_BYTE, data2.data());
-
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width2, height2, 0, GL_RGBA, GL_UNSIGNED_BYTE, data2.data());
+    int glerror = glGetError();
     return textureId;
 }
 
@@ -57,19 +56,39 @@ JTextureManager::JTextureManager(JEngine &jengine)
 {
     // Load file and decode image.
     mDefaultImage = std::make_shared<JImage>();
-    mDefaultImage->mData = {255, 255, 255, 255};
-    mDefaultImage->mWidth = 1;
-    mDefaultImage->mHeight = 1;
+    mDefaultImage->mData = {255, 255, 255, 255,
+                            255, 255, 255, 255,
+                            255, 255, 255, 255,
+                            255, 255, 255, 255,
+                            255, 255, 255, 255,
+                            255, 255, 255, 255,
+                            255, 255, 255, 255,
+                            255, 255, 255, 255,
+                            255, 255, 255, 255,
+                            255, 255, 255, 255,
+                            255, 255, 255, 255,
+                            255, 255, 255, 255,
+                            255, 255, 255, 255,
+                            255, 255, 255, 255,
+                            255, 255, 255, 255,
+                            255, 255, 255, 255 };
+    mDefaultImage->mWidth = 4;
+    mDefaultImage->mHeight = 4;
     mDefaultImage->mError = 0;
     mDefaultImage->mTextureId = CreateOpenGLTexture(mDefaultImage, false);
 }
 
 JTextureManager::~JTextureManager()
 {
-
+    for (auto jTexturePair : mJTextures)
+    {
+        unsigned tempTextureId = jTexturePair.second->GetTextureId();
+        glDeleteTextures(1, &tempTextureId);
+    }
+    mJTextures.clear();
 }
 
-auto JTextureManager::GetFilenameFromPath(const std::string &path)
+auto JTextureManager::GetFilenameFromPath(const std::string &path) const
 {
     auto lastOfStart = path.find_last_of("\\") + 1;
     return path.substr(lastOfStart, path.size() - lastOfStart);
@@ -77,16 +96,27 @@ auto JTextureManager::GetFilenameFromPath(const std::string &path)
 
 std::shared_ptr<JTexture> JTextureManager::GetTexture(const std::string texturePath)
 {
-    std::string fullPath = mJEngine.ResourcesPath() + texturePath;
+    auto filename = GetFilenameFromPath(texturePath);
+    auto found = mJTextures.find(filename);
+    if (found != mJTextures.end())
+    {
+        return found->second;
+    }
+
+    /////////////////
+    // make new JTexture
+    ////////////////
+
+    auto fullPath = mJEngine.ResourcesPath() + texturePath;
 
     auto jTexture = std::make_shared<JTexture>();
     jTexture->mImage = mDefaultImage;
 
-    mJEngine.ThreadPool().enqueue(std::bind([this](const std::string &fullPath, std::shared_ptr<JTexture> jTexture)
+    mJEngine.ThreadPool().enqueue(std::bind([this](const std::string &fullPath, const std::string &filename, std::shared_ptr<JTexture> jTexture)
     {
         // Load file and decode image.
         auto image = std::make_shared<JImage>();
-        image->mFilename = GetFilenameFromPath(fullPath);
+        image->mFilename = filename;
         image->mError = lodepng::decode(image->mData, image->mWidth, image->mHeight, fullPath);
 
         return std::bind([this](std::shared_ptr<JImage> image, std::shared_ptr<JTexture> jTexture)
@@ -94,7 +124,9 @@ std::shared_ptr<JTexture> JTextureManager::GetTexture(const std::string textureP
             jTexture->mImage = image;
             jTexture->mImage->mTextureId = CreateOpenGLTexture(jTexture->mImage, false);
         }, image, jTexture);
-    }, fullPath, jTexture));
+    }, fullPath, filename, jTexture));
+
+    mJTextures[filename] = jTexture;
 
     return jTexture;
 }

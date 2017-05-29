@@ -29,6 +29,8 @@
     <ClInclude Include="source\lodepng.h" />
     <ClInclude Include="source\JMathUtils.h" />
     <ClInclude Include="source\Matrix.h" />
+    <ClInclude Include="source\sdl_class.h" />
+    <ClInclude Include="source\Shader.h" />
     <ClInclude Include="source\thread_pool.h" />
     <ClInclude Include="source\TimeClass.h" />
     <ClInclude Include="source\Utilities.h" />
@@ -47,6 +49,8 @@
     <ClCompile Include="source\lodepng.cpp" />
     <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\Matrix.cpp" />
+    <ClCompile Include="source\sdl_class.cpp" />
+    <ClCompile Include="source\Shader.cpp" />
     <ClCompile Include="source\TimeClass.cpp" />
     <ClCompile Include="source\Utilities.cpp" />
     <ClCompile Include="source\Vec2.cpp" />

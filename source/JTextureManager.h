@@ -14,7 +14,7 @@ public:
     ~JTextureManager();
     std::shared_ptr<JTexture> GetTexture(const std::string texturePath);
 private:
-    auto GetFilenameFromPath(const std::string &path);
+    auto GetFilenameFromPath(const std::string &path) const;
     JEngine &mJEngine;
     std::map<std::string, std::shared_ptr<JTexture> > mJTextures;
     std::shared_ptr<JImage> mDefaultImage;

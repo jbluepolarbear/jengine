@@ -2,10 +2,12 @@
 
 int main(int argc, char *argv[])
 {
-    JEngine jengine;
+    {
+        JEngine jengine;
 
-    jengine.Initialize();
-    jengine.Run();
+        jengine.Initialize();
+        jengine.Run();
+    }
 
     return 0;
 }
